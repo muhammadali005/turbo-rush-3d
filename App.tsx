@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { GameScene } from './components/GameScene';
@@ -109,9 +108,9 @@ const App: React.FC = () => {
   }, [gameState]);
 
   return (
-    <div className="relative w-full h-screen bg-gray-900 text-white font-sans overflow-hidden select-none">
+    <div className="position-relative w-100 vh-100 bg-dark text-white overflow-hidden user-select-none">
       {/* 3D Canvas Layer */}
-      <div className="absolute inset-0 z-0">
+      <div className="position-absolute top-0 start-0 w-100 h-100 z-0">
         <Canvas shadows camera={{ position: [0, 3, 6], fov: 50 }}>
           <GameScene 
             gameState={gameState} 
@@ -127,32 +126,32 @@ const App: React.FC = () => {
 
       {/* HUD Layer - Top Left during gameplay */}
       {(gameState === GameState.PLAYING || gameState === GameState.PAUSED) && (
-        <div className="absolute top-0 left-0 p-4 z-10 flex flex-col items-start space-y-2 pointer-events-none">
-          <div className="bg-black/60 backdrop-blur-sm p-4 rounded-lg border-l-4 border-orange-500 shadow-lg min-w-[180px]">
-            <div className="flex justify-between items-center mb-1">
-              <span className="text-gray-300 text-sm uppercase font-bold">Score</span>
-              <span className="text-2xl font-mono font-bold text-white">{score}</span>
+        <div className="position-absolute top-0 start-0 p-3 z-10 d-flex flex-column align-items-start pe-none">
+          <div className="card bg-dark bg-opacity-75 text-white border-0 border-start border-4 border-warning shadow hud-card backdrop-blur p-3" style={{minWidth: '180px'}}>
+            <div className="d-flex justify-content-between align-items-center mb-1">
+              <span className="text-secondary small fw-bold text-uppercase">Score</span>
+              <span className="font-monospace fw-bold fs-4">{score}</span>
             </div>
-            <div className="flex justify-between items-center mb-1">
-              <span className="text-gray-300 text-sm uppercase font-bold">Balls</span>
-              <span className="text-2xl font-mono font-bold text-orange-400">{balls}</span>
+            <div className="d-flex justify-content-between align-items-center mb-1">
+              <span className="text-secondary small fw-bold text-uppercase">Balls</span>
+              <span className="font-monospace fw-bold fs-4 text-warning">{balls}</span>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-300 text-sm uppercase font-bold">Speed</span>
-              <span className="text-xl font-mono font-bold text-blue-400">{Math.floor(speed)}</span>
+            <div className="d-flex justify-content-between align-items-center">
+              <span className="text-secondary small fw-bold text-uppercase">Speed</span>
+              <span className="font-monospace fw-bold fs-5 text-info">{Math.floor(speed)}</span>
             </div>
           </div>
 
-          <div className="flex space-x-2 pointer-events-auto">
+          <div className="d-flex gap-2 mt-2 pe-auto">
              <button 
               onClick={togglePause}
-              className="mt-2 px-4 py-2 bg-gray-800/80 hover:bg-gray-700 text-white text-xs font-bold rounded border border-gray-500/30 transition flex items-center"
+              className="btn btn-secondary btn-sm fw-bold d-flex align-items-center shadow-sm bg-opacity-75"
             >
               {gameState === GameState.PAUSED ? "▶ RESUME" : "⏸ PAUSE"}
             </button>
             <button 
               onClick={exitGame}
-              className="mt-2 px-4 py-2 bg-red-900/80 hover:bg-red-800 text-white text-xs font-bold rounded border border-red-500/30 transition"
+              className="btn btn-danger btn-sm fw-bold shadow-sm bg-opacity-75"
             >
               EXIT
             </button>
@@ -162,53 +161,58 @@ const App: React.FC = () => {
 
       {/* Start Screen */}
       {gameState === GameState.START && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/80 backdrop-blur-md pointer-events-auto">
-          <div className="text-center max-w-lg p-8 border border-white/20 rounded-2xl bg-gray-800/50 shadow-2xl relative overflow-hidden">
+        <div className="position-absolute top-0 start-0 w-100 h-100 z-20 d-flex align-items-center justify-content-center bg-dark bg-opacity-75 backdrop-blur pe-auto">
+          <div className="card bg-dark text-white border-secondary shadow-lg p-4 text-center position-relative overflow-hidden" style={{maxWidth: '600px', width: '90%'}}>
             
-             {/* Decorative background elements */}
-             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
+             {/* Decorative line */}
+             <div className="position-absolute top-0 start-0 w-100" style={{height: '4px', background: 'linear-gradient(90deg, transparent, #fd7e14, transparent)'}}></div>
             
             {highScore > 0 && (
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-yellow-500 text-black font-bold px-6 py-1 rounded-b-lg shadow-lg border-x border-b border-white/50 z-10">
-                High Score: {highScore}
+              <div className="position-absolute top-0 start-50 translate-middle-x">
+                <span className="badge bg-warning text-dark shadow-sm border-bottom border-light rounded-bottom-2 rounded-top-0">
+                  High Score: {highScore}
+                </span>
               </div>
             )}
             
-            <h1 className="text-7xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600 mb-1 mt-4 drop-shadow-sm transform -skew-x-12">
-              TURBO RUSH
-            </h1>
-            <h2 className="text-2xl font-light tracking-widest text-white/80 mb-8 uppercase">Endless Horizon</h2>
+            <h1 className="display-3 fw-bolder fst-italic text-gradient mt-3 mb-1">TURBO RUSH</h1>
+            <p className="lead text-white-50 text-uppercase ls-1 mb-4" style={{letterSpacing: '4px'}}>Endless Horizon</p>
             
-            <div className="grid grid-cols-2 gap-4 mb-8">
-                 <div className="bg-black/40 p-4 rounded-lg border border-white/10 text-left">
-                    <h3 className="text-orange-400 font-bold mb-2 uppercase text-xs tracking-wider">Controls</h3>
-                    <div className="flex items-center space-x-4">
-                        <div className="flex space-x-1">
-                            <div className="w-8 h-8 border border-gray-500 rounded flex items-center justify-center bg-gray-700 text-xs">A</div>
-                            <div className="w-8 h-8 border border-gray-500 rounded flex items-center justify-center bg-gray-700 text-xs">D</div>
+            <div className="row g-3 mb-4 text-start">
+                 <div className="col-md-6">
+                    <div className="p-3 rounded bg-black bg-opacity-50 border border-secondary h-100">
+                        <h6 className="text-warning fw-bold text-uppercase small mb-2">Controls</h6>
+                        <div className="d-flex align-items-center gap-3 mb-2">
+                            <div className="d-flex gap-1">
+                                <span className="badge border border-secondary bg-secondary bg-opacity-25 rounded-1 p-2 font-monospace">A</span>
+                                <span className="badge border border-secondary bg-secondary bg-opacity-25 rounded-1 p-2 font-monospace">D</span>
+                            </div>
+                            <small className="text-secondary">Move Left / Right</small>
                         </div>
-                        <span className="text-gray-400 text-xs">Move Left / Right</span>
-                    </div>
-                    <div className="flex items-center space-x-4 mt-2">
-                        <div className="w-16 h-8 border border-gray-500 rounded flex items-center justify-center bg-gray-700 text-xs">Swipe</div>
-                        <span className="text-gray-400 text-xs">Mobile</span>
+                        <div className="d-flex align-items-center gap-3">
+                            <span className="badge border border-secondary bg-secondary bg-opacity-25 rounded-1 px-3 py-2">Swipe</span>
+                            <small className="text-secondary">Mobile</small>
+                        </div>
                     </div>
                  </div>
-                 <div className="bg-black/40 p-4 rounded-lg border border-white/10 text-left">
-                    <h3 className="text-blue-400 font-bold mb-2 uppercase text-xs tracking-wider">Mission</h3>
-                    <ul className="text-sm space-y-1 text-gray-300">
-                        <li className="flex items-center"><span className="text-orange-500 mr-2">●</span> Collect Balls (+10)</li>
-                        <li className="flex items-center"><span className="text-red-500 mr-2">●</span> Dodge Barriers</li>
-                        <li className="flex items-center"><span className="text-blue-500 mr-2">●</span> Survive Speed</li>
-                    </ul>
+                 <div className="col-md-6">
+                    <div className="p-3 rounded bg-black bg-opacity-50 border border-secondary h-100">
+                        <h6 className="text-info fw-bold text-uppercase small mb-2">Mission</h6>
+                        <ul className="list-unstyled small text-light mb-0 d-flex flex-column gap-1">
+                            <li><span className="text-warning me-2">●</span> Collect Balls (+10)</li>
+                            <li><span className="text-danger me-2">●</span> Dodge Barriers</li>
+                            <li><span className="text-primary me-2">●</span> Survive Speed</li>
+                        </ul>
+                    </div>
                  </div>
             </div>
 
             <button 
               onClick={startGame}
-              className="w-full py-4 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white font-bold rounded-lg text-2xl shadow-lg shadow-orange-900/50 transform transition hover:scale-[1.02] active:scale-[0.98]"
+              className="btn btn-warning w-100 py-3 fw-bold fs-4 shadow text-uppercase btn-transform"
+              style={{background: 'linear-gradient(to right, #fd7e14, #ffc107)', border: 'none'}}
             >
-              START ENGINE
+              Start Engine
             </button>
           </div>
         </div>
@@ -216,19 +220,19 @@ const App: React.FC = () => {
 
       {/* Pause Screen */}
       {gameState === GameState.PAUSED && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/60 backdrop-blur-sm pointer-events-auto">
-           <div className="text-center p-8 bg-gray-900/90 border border-white/20 rounded-xl shadow-2xl">
-              <h2 className="text-4xl font-bold text-white mb-8 tracking-widest">PAUSED</h2>
-              <div className="flex flex-col space-y-3">
+        <div className="position-absolute top-0 start-0 w-100 h-100 z-20 d-flex align-items-center justify-content-center bg-black bg-opacity-50 backdrop-blur pe-auto">
+           <div className="card bg-dark text-white border-secondary shadow-lg p-5 text-center" style={{minWidth: '300px'}}>
+              <h2 className="display-5 fw-bold text-white mb-4" style={{letterSpacing: '4px'}}>PAUSED</h2>
+              <div className="d-flex flex-col gap-3 w-100">
                 <button 
                   onClick={togglePause}
-                  className="px-8 py-3 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded shadow"
+                  className="btn btn-warning fw-bold py-2 w-100 mb-3"
                 >
                   RESUME GAME
                 </button>
                 <button 
                   onClick={exitGame}
-                  className="px-8 py-3 bg-gray-700 hover:bg-gray-600 text-white font-bold rounded shadow"
+                  className="btn btn-secondary fw-bold py-2 w-100"
                 >
                   EXIT TO MENU
                 </button>
@@ -239,36 +243,36 @@ const App: React.FC = () => {
 
       {/* Game Over Screen */}
       {gameState === GameState.GAME_OVER && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center bg-red-900/80 backdrop-blur-md pointer-events-auto">
-          <div className="text-center p-8 rounded-2xl border border-red-500/30 bg-black/60 shadow-2xl animate-bounce-slow max-w-md w-full">
-            <h2 className="text-5xl font-bold text-red-500 mb-2">CRASHED!</h2>
+        <div className="position-absolute top-0 start-0 w-100 h-100 z-20 d-flex align-items-center justify-content-center bg-danger bg-opacity-75 backdrop-blur pe-auto">
+          <div className="card bg-dark text-white border-danger shadow-lg p-4 text-center animate-bounce-slow" style={{maxWidth: '400px', width: '90%'}}>
+            <h2 className="display-4 fw-bold text-danger mb-3">CRASHED!</h2>
             
-            <div className="my-6 bg-black/40 p-4 rounded-lg">
-              <div className="text-6xl font-mono font-bold text-white mb-2">{score}</div>
-              <p className="text-gray-400 uppercase tracking-widest text-xs mb-4">Final Score</p>
+            <div className="my-4 bg-black bg-opacity-50 p-3 rounded border border-dark">
+              <div className="display-1 font-monospace fw-bold text-white mb-1">{score}</div>
+              <p className="text-secondary small text-uppercase fw-bold mb-3" style={{letterSpacing: '2px'}}>Final Score</p>
               
-              <div className="flex justify-center space-x-4 text-sm">
-                <div className="bg-orange-900/50 px-3 py-1 rounded text-orange-200 flex items-center">
-                   <span className="mr-2 text-lg">🏀</span> {balls} Balls
-                </div>
+              <div className="d-flex justify-content-center gap-2">
+                <span className="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 p-2">
+                   <span className="me-1 fs-6">🏀</span> {balls} Balls
+                </span>
                 {score >= highScore && score > 0 && (
-                   <div className="bg-yellow-900/50 px-3 py-1 rounded text-yellow-200 flex items-center">
-                     <span className="mr-2 text-lg">🏆</span> New Best!
-                   </div>
+                   <span className="badge bg-warning text-dark p-2">
+                     <span className="me-1 fs-6">🏆</span> New Best!
+                   </span>
                 )}
               </div>
             </div>
 
-            <div className="flex flex-col space-y-3">
+            <div className="d-grid gap-2">
               <button 
                 onClick={startGame}
-                className="w-full px-8 py-3 bg-white text-red-900 font-bold rounded-lg text-lg shadow-lg hover:bg-gray-200 transition transform hover:-translate-y-1"
+                className="btn btn-light fw-bold py-3 fs-5"
               >
                 PLAY AGAIN
               </button>
               <button 
                 onClick={exitGame}
-                className="w-full px-8 py-3 bg-red-950/50 border border-red-500/50 text-red-300 font-bold rounded-lg text-lg hover:bg-red-900/50 transition"
+                className="btn btn-outline-danger fw-bold py-3"
               >
                 EXIT TO MENU
               </button>
